@@ -34,6 +34,7 @@ namespace Genius_Square_Solver
         public char Type
         {
             get { return type; }
+            set { type = value; }
         }
     }
 }

@@ -15,6 +15,11 @@ namespace Genius_Square_Solver
             this.grid = grid;
         }
 
+        public Cell[,] Grid
+        {
+            get { return grid; }
+        }
+
         public void DisplayBoard()
         {
             Console.WriteLine("  1 2 3 4 5 6");
@@ -31,9 +36,17 @@ namespace Genius_Square_Solver
             Console.WriteLine();
         }
 
-        public void UpdateBoard(Cell cell)
+        public void AddCellToBoard(Cell cell)
         {
             grid[cell.Y, cell.X] = cell;
+        }
+
+        public void AddShapeToBoard(Shape shape)
+        {
+            foreach (Cell square in shape.Squares)
+            {
+                AddCellToBoard(square);
+            }
         }
     }
 }

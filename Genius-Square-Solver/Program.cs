@@ -45,8 +45,10 @@ namespace Genius_Square_Solver
             }
 
             Board board = GenerateBoard(blockers);
-
             board.DisplayBoard();
+
+            Solver.SingleSolver(board);
+
             Console.ReadLine();
         }
 
@@ -101,7 +103,7 @@ namespace Genius_Square_Solver
 
                 unusedDice.Remove(diceIndex);
                 blockers[diceIndex] = input;
-                board.UpdateBoard(Tools.StrToCell(input, true));
+                board.AddCellToBoard(Tools.StrToCell(input, true));
 
                 Console.Clear();
                 board.DisplayBoard();

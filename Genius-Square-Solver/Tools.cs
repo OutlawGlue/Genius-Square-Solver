@@ -26,8 +26,8 @@ namespace Genius_Square_Solver
 
         public static string CellToStr(Cell cell)
         {
-            char letter = (char)('A' + cell.Y - 1);
-            return letter.ToString() + cell.X.ToString();
+            char letter = (char)('A' + cell.Y);
+            return letter.ToString() + (cell.X + 1).ToString();
         }
     }
 }
