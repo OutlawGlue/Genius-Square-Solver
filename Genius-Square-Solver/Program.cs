@@ -63,34 +63,52 @@ namespace Genius_Square_Solver
         private static void InputDice(ref string[] blockers)
         {
             Board board = GenerateBoard();
-            board.DisplayBoard();
-
             List<int> unusedDice = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
+
+            board.DisplayBoard();
+            int statusTop = Console.CursorTop;   //The line under the board (where status is if exists)
+            int promptTop = statusTop + 1;       //The prompt is one line lower
+            const string prompt = "Enter a dice (eg. B4): ";
+            int statusPrevLen = 0;
+            int promptPrevLen = prompt.Length;
+
+            void UpdateStatus(string message)
+            {
+                Console.SetCursorPosition(0, statusTop);
+                Console.Write(message.PadRight(statusPrevLen));
+                statusPrevLen = message.Length;
+            }
 
             while (unusedDice.Count > 0)
             {
-                Console.Write("Enter a dice (eg. B4): ");
-                string input = Console.ReadLine().Trim().ToUpper();
+                //Wipe the whole prompt line, then rewrite it and put the cursor after the text
+                Console.SetCursorPosition(0, promptTop);
+                Console.Write(string.Empty.PadRight(promptPrevLen));
 
+                Console.SetCursorPosition(0, promptTop);
+                Console.Write(prompt);
+                Console.SetCursorPosition(prompt.Length, promptTop); //Put cursor back after prompt
+
+                string input = Console.ReadLine().Trim().ToUpper();
+                promptPrevLen = Math.Max(promptPrevLen, prompt.Length + input.Length); //Account for text from previous invalid input
                 int diceIndex = ValidateInput(input, unusedDice);
 
-                if (diceIndex != -1)
+                if (diceIndex == -1)
                 {
-                    Console.Clear();
-
-                    unusedDice.Remove(diceIndex);
-                    blockers[diceIndex] = input;
-
-                    Cell blocker = Tools.StrToCell(input, true);
-                    board.UpdateBoard(blocker);
-
-                    board.DisplayBoard();
-                    Console.WriteLine($"Valid input. {unusedDice.Count} left.");
+                    UpdateStatus($"Invalid input ({input}). {unusedDice.Count} left.");
+                    continue;
                 }
-                else
-                {
-                    Console.WriteLine($"Invalid input ({input}) {unusedDice.Count} left.");
-                }
+
+                unusedDice.Remove(diceIndex);
+                blockers[diceIndex] = input;
+                board.UpdateBoard(Tools.StrToCell(input, true));
+
+                Console.Clear();
+                board.DisplayBoard();
+                statusTop = Console.CursorTop;
+                promptTop = statusTop + 1;
+                statusPrevLen = 0;
+                UpdateStatus($"Valid input. {unusedDice.Count} left.");
             }
         }
 
