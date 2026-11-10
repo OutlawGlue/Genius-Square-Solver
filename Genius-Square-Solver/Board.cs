@@ -17,17 +17,23 @@ namespace Genius_Square_Solver
 
         public void DisplayBoard()
         {
-            Console.WriteLine(" 1 2 3 4 5 6");
+            Console.WriteLine("  1 2 3 4 5 6");
 
             for (int y = 0; y < 6; y++)
             {
-                Console.Write(" ");
+                Console.Write((char)('A' + y) + " ");
                 for (int x = 0; x < 6; x++)
                 {
-                    Console.Write(grid[y, x]?.Type ?? '-');
+                    Console.Write(grid[y, x].Type + " ");
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine();
+        }
+
+        public void UpdateBoard(Cell cell)
+        {
+            grid[cell.Y, cell.X] = cell;
         }
     }
 }

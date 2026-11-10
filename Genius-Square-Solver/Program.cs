@@ -32,6 +32,7 @@ namespace Genius_Square_Solver
                 "\n 2: Input dice values" +
                 "\n 3: Coming soon");
             string input = Console.ReadLine();
+            Console.Clear();
 
             string[] blockers = new string[7];
 
@@ -42,6 +43,11 @@ namespace Genius_Square_Solver
                 case "3": break;
                 default: Console.WriteLine("Invalid input."); break;
             }
+
+            Board board = GenerateBoard(blockers);
+
+            board.DisplayBoard();
+            Console.ReadLine();
         }
 
         private static void RollDice(ref string[] blockers)
@@ -56,6 +62,9 @@ namespace Genius_Square_Solver
 
         private static void InputDice(ref string[] blockers)
         {
+            Board board = GenerateBoard();
+            board.DisplayBoard();
+
             List<int> unusedDice = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
 
             while (unusedDice.Count > 0)
@@ -67,8 +76,15 @@ namespace Genius_Square_Solver
 
                 if (diceIndex != -1)
                 {
+                    Console.Clear();
+
                     unusedDice.Remove(diceIndex);
                     blockers[diceIndex] = input;
+
+                    Cell blocker = Tools.StrToCell(input, true);
+                    board.UpdateBoard(blocker);
+
+                    board.DisplayBoard();
                     Console.WriteLine($"Valid input. {unusedDice.Count} left.");
                 }
                 else
@@ -92,6 +108,32 @@ namespace Genius_Square_Solver
             }
 
             return -1;
+        }
+
+        private static Board GenerateBoard(string[] blockers = null)
+        {
+            Cell[,] grid = new Cell[6, 6];
+
+            for (int y = 0; y < 6; y++)
+            {
+                for (int x = 0; x < 6; x++)
+                {
+                    grid[y, x] = new Cell(y, x);
+                }
+            }
+
+            if (blockers != null)
+            {
+                foreach (string blocker in blockers)
+                {
+                    Cell cell = Tools.StrToCell(blocker, true);
+                    int y = cell.Y; int x = cell.X;
+
+                    grid[y, x] = cell;
+                }
+            }
+
+            return new Board(grid);
         }
     }
 }
