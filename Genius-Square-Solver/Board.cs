@@ -41,11 +41,13 @@ namespace Genius_Square_Solver
             grid[cell.Y, cell.X] = cell;
         }
 
-        public void AddShapeToBoard(Shape shape)
+        public void AddShapeToBoard(Shape shape, int startX, int startY)
         {
             foreach (Cell square in shape.Squares)
             {
-                AddCellToBoard(square);
+                int gridX = startX + square.X;
+                int gridY = startY + square.Y;
+                Grid[gridY, gridX].Type = shape.Id; //Mutate the existing grid cell
             }
         }
     }

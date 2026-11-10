@@ -47,7 +47,7 @@ namespace Genius_Square_Solver
             Board board = GenerateBoard(blockers);
             board.DisplayBoard();
 
-            Solver.SingleSolver(board);
+            Solver solver = new Solver(board);
 
             Console.ReadLine();
         }
