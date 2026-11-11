@@ -38,7 +38,7 @@ namespace Genius_Square_Solver
             Console.WriteLine("" +
                 "\n 1: Roll dice" +
                 "\n 2: Input dice values" +
-                "\n 3: Coming soon" +
+                "\n 3: Multi-solver" +
                 "\n 4: Exit");
             string input = Console.ReadLine();
             Console.Clear();
@@ -47,15 +47,22 @@ namespace Genius_Square_Solver
 
             switch (input)
             {
-                case "1": RollDice(ref blockers); break;
-                case "2": InputDice(ref blockers); break;
-                //case "3": break; //IMPLEMENTED LATER
+                case "1": RollDice(ref blockers); SingleSolve(blockers); break;
+                case "2": InputDice(ref blockers); SingleSolve(blockers); break;
+                case "3": break;
                 case "4": Environment.Exit(0); break;
                 default: Console.Write("Invalid input. (Enter to continue)"); 
                     Console.ReadLine(); return;
-            }
+            }            
 
+            Console.Write("(Press enter to return to menu)");
+            Console.ReadLine();
+        }
+
+        private static void SingleSolve(string[] blockers)
+        {
             Console.Clear();
+
             Board board = GenerateBoard(blockers);
             board.DisplayBoard();
 
@@ -72,9 +79,6 @@ namespace Genius_Square_Solver
             {
                 return;
             }
-
-            Console.Write("(Press enter to return to menu)");
-            Console.ReadLine();
         }
 
         private static void RollDice(ref string[] blockers)
