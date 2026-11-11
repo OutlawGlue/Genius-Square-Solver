@@ -47,9 +47,11 @@ namespace Genius_Square_Solver
 
             switch (input)
             {
-                case "1": RollDice(ref blockers); SingleSolve(blockers); break;
-                case "2": InputDice(ref blockers); SingleSolve(blockers); break;
-                case "3": break;
+                case "1": RollDice(ref blockers); Console.Clear();
+                    SingleSolve(blockers); break;
+                case "2": InputDice(ref blockers); Console.Clear();
+                    SingleSolve(blockers); break;
+                case "3": MultiSolve(GetMultiSolveSettings()); break;
                 case "4": Environment.Exit(0); break;
                 default: Console.Write("Invalid input. (Enter to continue)"); 
                     Console.ReadLine(); return;
@@ -59,26 +61,65 @@ namespace Genius_Square_Solver
             Console.ReadLine();
         }
 
-        private static void SingleSolve(string[] blockers)
+        private static void SingleSolve(string[] blockers, bool isMulti = false)
         {
-            Console.Clear();
-
+            Console.WriteLine("Blank board:");
             Board board = GenerateBoard(blockers);
             board.DisplayBoard();
 
-            //Check if user is happy to proceed:
-            Console.Write("Proceed to solve (Y/n)? ");
-            string toProceed = Console.ReadLine();
-            Console.Clear();
-
-            if (toProceed.ToLower() != "n")
+            if (!isMulti)
             {
-                new Solver(board);
+                //Check if user is happy to proceed:
+                Console.Write("Proceed to solve (Y/n)? ");
+                string toProceed = Console.ReadLine();
+                Console.Clear();
+
+                if (toProceed.ToLower() != "n")
+                {
+                    new Solver(board);
+                }
+                else
+                {
+                    return;
+                }
             }
             else
             {
-                return;
+                Console.WriteLine("Solution:");
+                new Solver(board);
             }
+        }
+
+        private static void MultiSolve(int solCount)
+        {
+            //For now, just solve random solutions
+            string[] blockers = new string[7];
+
+            for (int i = 0; i < solCount; i++)
+            {
+                RollDice(ref blockers);
+                SingleSolve(blockers, true);
+            }
+        }
+
+        private static int GetMultiSolveSettings()
+        {
+            Console.Write("Enter a number of solutions to find: ");
+            int solCount = 0;
+
+            try
+            {
+                solCount = Convert.ToInt16(Console.ReadLine());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+
+
+            Console.Clear();
+            return solCount;
         }
 
         private static void RollDice(ref string[] blockers)
