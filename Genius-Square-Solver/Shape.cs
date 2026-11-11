@@ -102,7 +102,9 @@ namespace Genius_Square_Solver
                 Cell s = squares[i];
                 copy[i] = new Cell(s.X, s.Y, id);
             }
-            return new Shape(id, copy, isClone: true);   //Skips orientation calc
+
+            //Skips orientation calc
+            return new Shape(id, copy, isClone: true);   
         }
 
         //Copy the squares, not the shape
