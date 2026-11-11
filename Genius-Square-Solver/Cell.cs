@@ -19,8 +19,6 @@ namespace Genius_Square_Solver
             this.type = type;
         }
 
-        public Cell(string coord) : this(coord[1] - 48, char.ToUpper(coord[0]) - 64) { }
-
         public int X
         {
             get { return x; }

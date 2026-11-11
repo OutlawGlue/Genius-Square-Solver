@@ -21,64 +21,55 @@ namespace Genius_Square_Solver
             new Shape('.', new Cell(0, 0)),                                              // monomino
         };
 
+        bool solved = false;
+
         public Solver(Board board)
         {
-            while (unusedShapes.Count > 0)
-            {
-                int before = unusedShapes.Count;
-                SingleSolver(board);
+            //Precalc shape rotations:
+            foreach (Shape shape in unusedShapes)
+                shape.CalculateOrientations();
 
-                if (unusedShapes.Count == before)
-                {
-                    //Check if made no progress this call (dead end)
-                    board.DisplayBoard();
-                    Console.WriteLine("Stuck: no shape fits the first empty cell.");
-                    Console.WriteLine("Remaining pieces: " +
-                        string.Join(", ", unusedShapes.Select(s => s.Id)));
-                    break;
-                }
-            }
+            Solved = Solve(board, unusedShapes);
+
+            board.DisplayBoard();
+            if (!Solved)
+                Console.WriteLine("No solution exists.");
         }
 
-        public void SingleSolver(Board board)
+        public bool Solved
         {
+            get { return solved; }
+            private set { solved = value; }
+        }
+
+        private bool Solve(Board board, List<Shape> shapes)
+        {
+            Cell[,] grid = board.Grid;
+
             int x, y;
             (x, y) = FindEmptyCell(board.Grid);
 
-            if (x == -1) return;   //Check if board is full
+            if (x == -1) return true;   //Check if board is full
 
-            Cell[,] grid = board.Grid;
-
-            for (int i = 0; i < unusedShapes.Count; i++)
+            for (int i = 0; i < shapes.Count; i++)
             {
-                Shape shape = unusedShapes[i];
-                bool placed = false;
+                Shape shape = shapes[i];
 
-                for (int flip = 0; flip < 2 && !placed; flip++)
+                foreach (Cell[] orientation in shape.Orientations)
                 {
-                    for (int rot = 0; rot < 4 && !placed; rot++)
-                    {
-                        if (CheckShapeFit(grid, shape, x, y))
-                        {
-                            board.AddShapeToBoard(shape, x, y);
-                            Console.WriteLine($"placed {shape.Id} at ({x},{y}), {unusedShapes.Count - 1} shapes left");
-                            placed = true;
-                        }
-                        else
-                        {
-                            shape.RotateRight();
-                        }
-                    }
-                    if (!placed)
-                        shape.Flip();
-                }
+                    if (!CheckShapeFit(grid, orientation, x, y)) continue;
 
-                if (placed)
-                {
-                    unusedShapes.RemoveAt(i); //Remove from available shapes
-                    return;
+                    PlaceShape(board, orientation, x, y);
+                    shapes.RemoveAt(i);
+
+                    if (Solve(board, shapes))
+                        return true;
+
+                    UnplaceShape(board, orientation, x, y);
+                    shapes.Insert(i, shape);
                 }
             }
+            return false;
         }
 
         public static (int, int) FindEmptyCell(Cell[,] grid)
@@ -94,26 +85,43 @@ namespace Genius_Square_Solver
                 }
             }
 
-            Console.WriteLine("Solved, no empty squares.");
             return (-1, -1);
         }
 
-        public static bool CheckShapeFit(Cell[,] grid, Shape shape, int startX, int startY)
+        public static bool CheckShapeFit(Cell[,] grid, Cell[] squares, int startX, int startY)
         {
-            foreach (Cell square in shape.Squares)
+            foreach (Cell square in squares)
             {
                 int gridX = startX + square.X;
                 int gridY = startY + square.Y;
 
-                //Check if off the board 
                 if (gridX > 5 || gridY > 5)
                     return false;
 
                 if (grid[gridY, gridX].Type != '-')
                     return false;
             }
-
             return true;
+        }
+
+        private static void PlaceShape(Board board, Cell[] squares, int startX, int startY)
+        {
+            foreach (Cell square in squares)
+            {
+                int y = startY + square.Y;
+                int x = startX + square.X;
+                board.Grid[y, x].Type = square.Type;
+            }
+        }
+
+        private static void UnplaceShape(Board board, Cell[] squares, int startX, int startY)
+        {
+            foreach (Cell square in squares)
+            {
+                int y = startY + square.Y;
+                int x = startX + square.X;
+                board.Grid[y, x].Type = '-';
+            }
         }
     }
 }

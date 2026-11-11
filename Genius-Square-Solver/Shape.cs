@@ -20,20 +20,6 @@ namespace Genius_Square_Solver
             {
                 square.Type = id;
             }
-
-            CalculateOrientations();
-        }
-
-        //Private constructor is for clones (no orientation):
-        private Shape(char id, Cell[] squares, bool isClone)
-        {
-            this.id = id;
-            this.squares = squares;
-
-            foreach (Cell square in squares)
-            {
-                square.Type = id;
-            }
         }
 
         public Cell[] Squares
@@ -52,7 +38,7 @@ namespace Genius_Square_Solver
             private set; 
         }
 
-        private void CalculateOrientations()
+        public void CalculateOrientations()
         {
             Orientations = new List<Cell[]>();
             HashSet<string> seen = new HashSet<string>();
@@ -104,7 +90,7 @@ namespace Genius_Square_Solver
             }
 
             //Skips orientation calc
-            return new Shape(id, copy, isClone: true);   
+            return new Shape(id, copy);   
         }
 
         //Copy the squares, not the shape
