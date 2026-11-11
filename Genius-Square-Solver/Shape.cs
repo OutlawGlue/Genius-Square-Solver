@@ -20,6 +20,20 @@ namespace Genius_Square_Solver
             {
                 square.Type = id;
             }
+
+            CalculateOrientations();
+        }
+
+        //Private constructor is for clones (no orientation):
+        private Shape(char id, Cell[] squares, bool isClone)
+        {
+            this.id = id;
+            this.squares = squares;
+
+            foreach (Cell square in squares)
+            {
+                square.Type = id;
+            }
         }
 
         public Cell[] Squares
@@ -30,6 +44,77 @@ namespace Genius_Square_Solver
         public char Id
         {
             get { return id; }
+        }
+
+        public List<Cell[]> Orientations 
+        { 
+            get; 
+            private set; 
+        }
+
+        private void CalculateOrientations()
+        {
+            Orientations = new List<Cell[]>();
+            HashSet<string> seen = new HashSet<string>();
+
+            for (int flipRound = 0; flipRound < 2; flipRound++) //0 = not, 1 = flipped
+            {
+                //Create clone each round
+                Shape cloneShape = Clone();
+                if (flipRound == 1)
+                    cloneShape.Flip();
+
+                for (int rotation = 0; rotation < 4; rotation++)
+                {
+                    string fingerprint = cloneShape.Key();
+
+                    //If clone is new, add:
+                    if (seen.Add(fingerprint))
+                    {
+                        Orientations.Add(cloneShape.CopySquares());
+                    }
+
+                    //Else rotate and retry
+                    cloneShape.RotateRight();
+                }
+            }
+        }
+
+        public string Key()
+        {
+            //Build "x,y" text for every square, then sort + join
+            List<string> parts = new List<string>();
+            foreach (Cell square in squares)
+            {
+                parts.Add(square.X + "," + square.Y);
+            }
+            parts.Sort();
+
+            return string.Join(";", parts);
+        }
+
+        //Create a copy of this shape
+        private Shape Clone()
+        {
+            Cell[] copy = new Cell[squares.Length];
+            for (int i = 0; i < squares.Length; i++)
+            {
+                Cell s = squares[i];
+                copy[i] = new Cell(s.X, s.Y, id);
+            }
+            return new Shape(id, copy, isClone: true);   //Skips orientation calc
+        }
+
+        //Copy the squares, not the shape
+        private Cell[] CopySquares()
+        {
+            Cell[] copy = new Cell[squares.Length];
+            for (int i = 0; i < squares.Length; i++)
+            {
+                Cell s = squares[i];
+                copy[i] = new Cell(s.X, s.Y, id);
+            }
+            return copy;
         }
 
         public void RotateRight()
