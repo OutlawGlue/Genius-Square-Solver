@@ -22,15 +22,24 @@ namespace Genius_Square_Solver
 
         static void Main()
         {
-            Menu();
+            while (true)
+            {
+                Menu();
+            }
         }
 
         private static void Menu()
         {
-            Console.WriteLine("Welcome to the Genius Square Solver!" +
+            Console.Clear();
+
+            //ANSI art:
+            Console.WriteLine(" ██████╗ ███████╗███╗   ██╗██╗██╗   ██╗███████╗   \r\n██╔════╝ ██╔════╝████╗  ██║██║██║   ██║██╔════╝   \r\n██║  ███╗█████╗  ██╔██╗ ██║██║██║   ██║███████╗   \r\n██║   ██║██╔══╝  ██║╚██╗██║██║██║   ██║╚════██║   \r\n╚██████╔╝███████╗██║ ╚████║██║╚██████╔╝███████║   \r\n ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚══════╝   \r\n                                                  \r\n███████╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ███████╗\r\n██╔════╝██╔═══██╗██║   ██║██╔══██╗██╔══██╗██╔════╝\r\n███████╗██║   ██║██║   ██║███████║██████╔╝█████╗  \r\n╚════██║██║▄▄ ██║██║   ██║██╔══██║██╔══██╗██╔══╝  \r\n███████║╚██████╔╝╚██████╔╝██║  ██║██║  ██║███████╗\r\n╚══════╝ ╚══▀▀═╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝\r\n                                                  \r\n███████╗ ██████╗ ██╗    ██╗   ██╗███████╗██████╗  \r\n██╔════╝██╔═══██╗██║    ██║   ██║██╔════╝██╔══██╗ \r\n███████╗██║   ██║██║    ██║   ██║█████╗  ██████╔╝ \r\n╚════██║██║   ██║██║    ╚██╗ ██╔╝██╔══╝  ██╔══██╗ \r\n███████║╚██████╔╝███████╗╚████╔╝ ███████╗██║  ██║ \r\n╚══════╝ ╚═════╝ ╚══════╝ ╚═══╝  ╚══════╝╚═╝  ╚═╝ \r\n                                                  ");
+
+            Console.WriteLine("" +
                 "\n 1: Roll dice" +
                 "\n 2: Input dice values" +
-                "\n 3: Coming soon");
+                "\n 3: Coming soon" +
+                "\n 4: Exit");
             string input = Console.ReadLine();
             Console.Clear();
 
@@ -41,13 +50,27 @@ namespace Genius_Square_Solver
                 case "1": RollDice(ref blockers); break;
                 case "2": InputDice(ref blockers); break;
                 case "3": break;
+                case "4": Environment.Exit(0); break;
                 default: Console.WriteLine("Invalid input."); break;
             }
 
+            Console.Clear();
             Board board = GenerateBoard(blockers);
             board.DisplayBoard();
 
-            Solver solver = new Solver(board);
+            //Check if user is happy to proceed:
+            Console.Write("Proceed to solve (Y/n)? ");
+            string toProceed = Console.ReadLine();
+
+            if (toProceed.ToLower() != "n")
+            {
+                Solver solver = new Solver(board);
+            }
+            else
+            {
+                return;
+            }
+            
 
             Console.ReadLine();
         }
