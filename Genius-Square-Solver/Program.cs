@@ -49,7 +49,7 @@ namespace Genius_Square_Solver
             {
                 case "1": RollDice(ref blockers); break;
                 case "2": InputDice(ref blockers); break;
-                //case "3": break;
+                //case "3": break; //IMPLEMENTED LATER
                 case "4": Environment.Exit(0); break;
                 default: Console.Write("Invalid input. (Enter to continue)"); 
                     Console.ReadLine(); return;
@@ -66,7 +66,7 @@ namespace Genius_Square_Solver
 
             if (toProceed.ToLower() != "n")
             {
-                Solver solver = new Solver(board);
+                new Solver(board);
             }
             else
             {
