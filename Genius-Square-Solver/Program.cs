@@ -52,7 +52,7 @@ namespace Genius_Square_Solver
             switch (input)
             {
                 case "1": StartSingleSolve(cursorTop); break;
-                case "2": MultiSolve(GetMultiSolveSettings(/*cursorTop*/)); break;
+                case "2": StartMultiSolve(cursorTop); break;
                 case "3": Environment.Exit(0); break;
                 default:
                     Console.Write("Invalid input. (Enter to continue)");
@@ -98,14 +98,15 @@ namespace Genius_Square_Solver
             HandleSolve(blockers);
         }
 
-        private static void HandleSolve(string[] blockers, bool isMulti = false)
+        private static void HandleSolve(string[] blockers, bool isMulti = false, int seed = 0)
         {
-            Console.WriteLine("Blank board:");
             Board board = GenerateBoard(blockers);
-            board.DisplayBoard();
 
             if (!isMulti)
             {
+                Console.WriteLine("Blank board:");
+                board.DisplayBoard();
+
                 //Check if user is happy to proceed:
                 Console.Write("Proceed to solve (Y/n)? ");
                 string toProceed = Console.ReadLine();
@@ -113,6 +114,7 @@ namespace Genius_Square_Solver
 
                 if (toProceed.ToLower() != "n")
                 {
+                    Console.WriteLine("Solution:");
                     new Solver(board);
                 }
                 else
@@ -122,41 +124,91 @@ namespace Genius_Square_Solver
             }
             else
             {
-                Console.WriteLine("Solution:");
+                Console.WriteLine($"Solution {seed}:");
                 new Solver(board);
             }
         }
 
-        private static void MultiSolve(int solCount)
+        private static void StartMultiSolve(int cursorTop)
         {
-            //For now, just solve random solutions
             string[] blockers = new string[7];
 
-            for (int i = 0; i < solCount; i++)
+            //Reset to sub-menu display:
+            Console.SetCursorPosition(0, cursorTop);
+            for (int _ = 0; _ < 5; _++)
             {
-                RollDice(ref blockers);
-                HandleSolve(blockers, true);
+                Console.Write(string.Empty.PadRight(Console.WindowWidth - 1));
+            }
+            Console.SetCursorPosition(0, cursorTop);
+
+            Console.WriteLine("" +
+                "\n 1: Input solve bounds" +
+                "\n 2: Coming soon..." +
+                "\n 3: Return to menu");
+
+            string input = Console.ReadLine();
+
+            int start = 0, end = 0;
+
+            switch (input)
+            {
+                case "1": InputSolveBounds(ref start, ref end); break;
+                case "2": /*Use a config file for solve*/
+                case "3": return;
+                default:
+                    Console.Write("Invalid input. (Enter to continue)");
+                    Console.ReadLine(); return;
+            }
+
+            Console.Clear();
+
+            while (start <= end)
+            {
+                int[] diceIndexes = SeedToDice(start);
+
+                for (int i = 0; i < 7; i++)
+                {
+                    blockers[i] = DICE_FACES[i][diceIndexes[i]];
+                }
+
+                HandleSolve(blockers, true, start);
+
+                start++;
             }
         }
 
-        private static int GetMultiSolveSettings()
+        private static void InputSolveBounds(ref int start, ref int end)
         {
-            Console.Write("Enter a number of solutions to find: ");
-            int solCount = 0;
+            Console.Clear();
 
-            try
+            while (start < 1 || start > 62208 || end < start || end < 1 || end > 62208) //REFINE BOUNDS LATER
             {
-                solCount = Convert.ToInt16(Console.ReadLine());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return 0;
-            }
+                Console.Write("Enter first puzzle to solve: ");
 
+                try
+                {
+                    start = Convert.ToInt16(Console.ReadLine());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    continue;
+                }
+
+                Console.Write("Enter last puzzle to solve: ");
+
+                try
+                {
+                    end = Convert.ToInt16(Console.ReadLine());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    continue;
+                }
+            }
 
             Console.Clear();
-            return solCount;
         }
 
         private static void RollDice(ref string[] blockers)
