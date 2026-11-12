@@ -9,16 +9,6 @@ namespace Genius_Square_Solver
 {
     internal class Program
     {
-        //static readonly string[,] DICE_FACES = {
-        //    { "A1", "C1", "D1", "D2", "E2", "F3" },
-        //    { "A2", "B2", "C2", "A3", "B1", "B3" },
-        //    { "C3", "D3", "E3", "B4", "C4", "D4" },
-        //    { "E1", "F2", "F2", "B6", "A5", "A5" },
-        //    { "A4", "B5", "C6", "C5", "D6", "F6" },
-        //    { "E4", "F4", "E5", "F5", "D5", "E6" },
-        //    { "F1", "F1", "F1", "A6", "A6", "A6" }
-        //};
-
         static readonly string[][] DICE_FACES =
         {
             new[] { "A1", "C1", "D1", "D2", "E2", "F3" },
@@ -48,36 +38,67 @@ namespace Genius_Square_Solver
             //ANSI art:
             Console.WriteLine("\n ██████╗ ███████╗███╗   ██╗██╗██╗   ██╗███████╗   \r\n██╔════╝ ██╔════╝████╗  ██║██║██║   ██║██╔════╝   \r\n██║  ███╗█████╗  ██╔██╗ ██║██║██║   ██║███████╗   \r\n██║   ██║██╔══╝  ██║╚██╗██║██║██║   ██║╚════██║   \r\n╚██████╔╝███████╗██║ ╚████║██║╚██████╔╝███████║   \r\n ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚══════╝   \r\n                                                  \r\n███████╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ███████╗\r\n██╔════╝██╔═══██╗██║   ██║██╔══██╗██╔══██╗██╔════╝\r\n███████╗██║   ██║██║   ██║███████║██████╔╝█████╗  \r\n╚════██║██║▄▄ ██║██║   ██║██╔══██║██╔══██╗██╔══╝  \r\n███████║╚██████╔╝╚██████╔╝██║  ██║██║  ██║███████╗\r\n╚══════╝ ╚══▀▀═╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝\r\n                                                  \r\n███████╗ ██████╗ ██╗    ██╗   ██╗███████╗██████╗  \r\n██╔════╝██╔═══██╗██║    ██║   ██║██╔════╝██╔══██╗ \r\n███████╗██║   ██║██║    ██║   ██║█████╗  ██████╔╝ \r\n╚════██║██║   ██║██║    ╚██╗ ██╔╝██╔══╝  ██╔══██╗ \r\n███████║╚██████╔╝███████╗╚████╔╝ ███████╗██║  ██║ \r\n╚══════╝ ╚═════╝ ╚══════╝ ╚═══╝  ╚══════╝╚═╝  ╚═╝ \r\n                                                  ");
 
-            Console.WriteLine("" +
-                "\n 1: Roll dice" +
-                "\n 2: Input dice values" +
-                "\n 3: Input seed" +
-                "\n 4: Multi-solver" +
-                "\n 5: Exit");
-            string input = Console.ReadLine();
-            Console.Clear();
+            int cursorTop = Console.CursorTop;
 
-            string[] blockers = new string[7];
+            Console.WriteLine("" +
+                "\n 1: Single solver" +
+                "\n 2: Multi solver" +
+                "\n 3: Exit");
+
+            string input = Console.ReadLine();
+
+            string[] blockers = new string[7];       
 
             switch (input)
             {
-                case "1": RollDice(ref blockers); Console.Clear();
-                    SingleSolve(blockers); break;
-                case "2": InputDice(ref blockers); Console.Clear();
-                    SingleSolve(blockers); break;
-                case "3": InputSeed(ref blockers);
-                    SingleSolve(blockers); break;
-                case "4": MultiSolve(GetMultiSolveSettings()); break;
-                case "5": Environment.Exit(0); break;
-                default: Console.Write("Invalid input. (Enter to continue)"); 
+                case "1": StartSingleSolve(cursorTop); break;
+                case "2": MultiSolve(GetMultiSolveSettings(/*cursorTop*/)); break;
+                case "3": Environment.Exit(0); break;
+                default:
+                    Console.Write("Invalid input. (Enter to continue)");
                     Console.ReadLine(); return;
-            }            
+            }
 
             Console.Write("(Press enter to return to menu)");
             Console.ReadLine();
         }
 
-        private static void SingleSolve(string[] blockers, bool isMulti = false)
+        private static void StartSingleSolve(int cursorTop)
+        {
+            string[] blockers = new string[7];
+
+            //Reset to sub-menu display:
+            Console.SetCursorPosition(0, cursorTop);
+            for (int _ = 0; _ < 4; _++)
+            {
+                Console.Write(string.Empty.PadRight(Console.WindowWidth - 1));
+            }
+            Console.SetCursorPosition(0, cursorTop);
+
+            Console.WriteLine("" +
+                "\n 1: Roll dice" +
+                "\n 2: Input dice" +
+                "\n 3: Input seed" +
+                "\n 4: Return to menu");
+
+            string input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1": RollDice(ref blockers); break;
+                case "2": InputDice(ref blockers); break;
+                case "3": InputSeed(ref blockers); break;
+                case "4": return;
+                default:
+                    Console.Write("Invalid input. (Enter to continue)");
+                    Console.ReadLine(); return;
+            }
+
+            Console.Clear();
+            HandleSolve(blockers);
+        }
+
+        private static void HandleSolve(string[] blockers, bool isMulti = false)
         {
             Console.WriteLine("Blank board:");
             Board board = GenerateBoard(blockers);
@@ -114,7 +135,7 @@ namespace Genius_Square_Solver
             for (int i = 0; i < solCount; i++)
             {
                 RollDice(ref blockers);
-                SingleSolve(blockers, true);
+                HandleSolve(blockers, true);
             }
         }
 
@@ -150,6 +171,7 @@ namespace Genius_Square_Solver
 
         private static void InputDice(ref string[] blockers)
         {
+            Console.Clear();
             Board board = GenerateBoard();
             List<int> unusedDice = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
 
@@ -218,18 +240,27 @@ namespace Genius_Square_Solver
 
         private static void InputSeed(ref string[] blockers)
         {
-            Console.Write("Enter a seed (eg. 37): ");
+            Console.Clear();
 
             int input = -1;
-            try
+            do
             {
-                input = int.Parse(Console.ReadLine());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return;
-            }
+                Console.Write("Enter a seed (eg. 37): ");
+
+                try
+                {
+                    input = int.Parse(Console.ReadLine());
+
+                    if (input < 1 || input > 62208)
+                    {
+                        throw new Exception("Invalid seed.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            } while (input < 1 || input > 62208);
 
             int[] diceIndexes = SeedToDice(input);
 
@@ -237,8 +268,6 @@ namespace Genius_Square_Solver
             {
                 blockers[i] = DICE_FACES[i][diceIndexes[i]];
             }
-
-            //Console.Clear();
         }
 
         private static int[] SeedToDice(int input)
