@@ -65,7 +65,8 @@ namespace Genius_Square_Solver
                     SingleSolve(blockers); break;
                 case "2": InputDice(ref blockers); Console.Clear();
                     SingleSolve(blockers); break;
-                case "3": InputSeed(ref blockers); break;
+                case "3": InputSeed(ref blockers);
+                    SingleSolve(blockers); break;
                 case "4": MultiSolve(GetMultiSolveSettings()); break;
                 case "5": Environment.Exit(0); break;
                 default: Console.Write("Invalid input. (Enter to continue)"); 
