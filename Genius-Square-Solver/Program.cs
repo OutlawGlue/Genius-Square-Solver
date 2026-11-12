@@ -177,52 +177,6 @@ namespace Genius_Square_Solver
             }
         }
 
-        //private static void InputSolveBounds(ref int start, ref int end)
-        //{
-        //    Console.Clear();
-
-        //    do
-        //    {
-        //        Console.Write("Enter first puzzle to solve (any no. >= 1 and <= 62208): ");
-
-        //        try
-        //        {
-        //            start = Convert.ToInt16(Console.ReadLine());
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Console.WriteLine(e.Message);
-        //            continue;
-        //        }
-
-        //        if (start < 1 || start > 62208)
-        //        {
-        //            Console.WriteLine("First puzzle must be: >= 1 and <= 62208");
-        //            break;
-        //        }
-
-        //        Console.Write("Enter last puzzle to solve (must be greater than first no.): ");
-
-        //        try
-        //        {
-        //            end = Convert.ToInt16(Console.ReadLine());
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Console.WriteLine(e.Message);
-        //            continue;
-        //        }
-
-        //        if (end < 1 || end > 62208)
-        //        {
-        //            Console.WriteLine("Last puzzle must be: >= 1 and <= 62208");
-        //            continue;
-        //        }
-        //    } while (end < start);
-
-        //    Console.Clear();
-        //}
-
         private static void InputSolveBounds(out int start, out int end)
         {
             Console.Clear();
