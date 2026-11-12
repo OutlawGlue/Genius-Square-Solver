@@ -148,7 +148,7 @@ namespace Genius_Square_Solver
 
             string input = Console.ReadLine();
 
-            int start = 0, end = 0;
+            int start, end;
 
             switch (input)
             {
