@@ -183,7 +183,7 @@ namespace Genius_Square_Solver
 
             while (start < 1 || start > 62208 || end < start || end < 1 || end > 62208) //REFINE BOUNDS LATER
             {
-                Console.Write("Enter first puzzle to solve: ");
+                Console.Write("Enter first puzzle to solve (any no. >= 1 and <= 62208): ");
 
                 try
                 {
@@ -195,7 +195,7 @@ namespace Genius_Square_Solver
                     continue;
                 }
 
-                Console.Write("Enter last puzzle to solve: ");
+                Console.Write("Enter last puzzle to solve (must be greater than first no.):");
 
                 try
                 {
