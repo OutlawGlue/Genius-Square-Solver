@@ -152,7 +152,7 @@ namespace Genius_Square_Solver
 
             switch (input)
             {
-                case "1": InputSolveBounds(ref start, ref end); break;
+                case "1": InputSolveBounds(out start, out end); break;
                 case "2": /*Use a config file for solve*/
                 case "3": return;
                 default:
@@ -177,35 +177,79 @@ namespace Genius_Square_Solver
             }
         }
 
-        private static void InputSolveBounds(ref int start, ref int end)
+        //private static void InputSolveBounds(ref int start, ref int end)
+        //{
+        //    Console.Clear();
+
+        //    do
+        //    {
+        //        Console.Write("Enter first puzzle to solve (any no. >= 1 and <= 62208): ");
+
+        //        try
+        //        {
+        //            start = Convert.ToInt16(Console.ReadLine());
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Console.WriteLine(e.Message);
+        //            continue;
+        //        }
+
+        //        if (start < 1 || start > 62208)
+        //        {
+        //            Console.WriteLine("First puzzle must be: >= 1 and <= 62208");
+        //            break;
+        //        }
+
+        //        Console.Write("Enter last puzzle to solve (must be greater than first no.): ");
+
+        //        try
+        //        {
+        //            end = Convert.ToInt16(Console.ReadLine());
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Console.WriteLine(e.Message);
+        //            continue;
+        //        }
+
+        //        if (end < 1 || end > 62208)
+        //        {
+        //            Console.WriteLine("Last puzzle must be: >= 1 and <= 62208");
+        //            continue;
+        //        }
+        //    } while (end < start);
+
+        //    Console.Clear();
+        //}
+
+        private static void InputSolveBounds(out int start, out int end)
         {
             Console.Clear();
 
-            while (start < 1 || start > 62208 || end < start || end < 1 || end > 62208) //REFINE BOUNDS LATER
+            while (true)
             {
-                Console.Write("Enter first puzzle to solve (any no. >= 1 and <= 62208): ");
-
-                try
+                Console.Write("Enter first puzzle to solve (>= 1 and <= 62208): ");
+                if (!int.TryParse(Console.ReadLine(), out start) || start < 1 || start > 62208)
                 {
-                    start = Convert.ToInt16(Console.ReadLine());
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine("First puzzle must be a whole number between 1 and 62208.\n");
                     continue;
                 }
 
-                Console.Write("Enter last puzzle to solve (must be greater than first no.):");
-
-                try
+                Console.Write("Enter last puzzle to solve (>= first number and <= 62208): ");
+                if (!int.TryParse(Console.ReadLine(), out end) || end < 1 || end > 62208)
                 {
-                    end = Convert.ToInt16(Console.ReadLine());
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine($"Last puzzle must be a whole number between {start} and 62208.\n");
                     continue;
                 }
+
+                if (end < start)
+                {
+                    Console.WriteLine($"Last puzzle ({end}) must be greater than or equal to the first ({start}).\n");
+                    continue;
+                }
+
+                break;
             }
 
             Console.Clear();
