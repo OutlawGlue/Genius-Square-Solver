@@ -9,15 +9,28 @@ namespace Genius_Square_Solver
 {
     internal class Program
     {
-        static readonly string[,] DICE_FACES = {
-            { "A1", "C1", "D1", "D2", "E2", "F3" },
-            { "A2", "B2", "C2", "A3", "B1", "B3" },
-            { "C3", "D3", "E3", "B4", "C4", "D4" },
-            { "E1", "F2", "F2", "B6", "A5", "A5" },
-            { "A4", "B5", "C6", "C5", "D6", "F6" },
-            { "E4", "F4", "E5", "F5", "D5", "E6" },
-            { "F1", "F1", "F1", "A6", "A6", "A6" }
+        //static readonly string[,] DICE_FACES = {
+        //    { "A1", "C1", "D1", "D2", "E2", "F3" },
+        //    { "A2", "B2", "C2", "A3", "B1", "B3" },
+        //    { "C3", "D3", "E3", "B4", "C4", "D4" },
+        //    { "E1", "F2", "F2", "B6", "A5", "A5" },
+        //    { "A4", "B5", "C6", "C5", "D6", "F6" },
+        //    { "E4", "F4", "E5", "F5", "D5", "E6" },
+        //    { "F1", "F1", "F1", "A6", "A6", "A6" }
+        //};
+
+        static readonly string[][] DICE_FACES =
+        {
+            new[] { "A1", "C1", "D1", "D2", "E2", "F3" },
+            new[] { "A2", "B2", "C2", "A3", "B1", "B3" },
+            new[] { "C3", "D3", "E3", "B4", "C4", "D4" },
+            new[] { "E1", "F2", "B6", "A5" },
+            new[] { "A4", "B5", "C6", "C5", "D6", "F6" },
+            new[] { "E4", "F4", "E5", "F5", "D5", "E6" },
+            new[] { "F1", "A6" }
         };
+
+        static readonly int[] DICE_RANGES = { 6, 6, 6, 4, 6, 6, 2 };
 
 
         static void Main()
@@ -38,8 +51,9 @@ namespace Genius_Square_Solver
             Console.WriteLine("" +
                 "\n 1: Roll dice" +
                 "\n 2: Input dice values" +
-                "\n 3: Multi-solver" +
-                "\n 4: Exit");
+                "\n 3: Input seed" +
+                "\n 4: Multi-solver" +
+                "\n 5: Exit");
             string input = Console.ReadLine();
             Console.Clear();
 
@@ -51,8 +65,9 @@ namespace Genius_Square_Solver
                     SingleSolve(blockers); break;
                 case "2": InputDice(ref blockers); Console.Clear();
                     SingleSolve(blockers); break;
-                case "3": MultiSolve(GetMultiSolveSettings()); break;
-                case "4": Environment.Exit(0); break;
+                case "3": InputSeed(ref blockers); break;
+                case "4": MultiSolve(GetMultiSolveSettings()); break;
+                case "5": Environment.Exit(0); break;
                 default: Console.Write("Invalid input. (Enter to continue)"); 
                     Console.ReadLine(); return;
             }            
@@ -128,7 +143,7 @@ namespace Genius_Square_Solver
 
             for (int i = 0; i < 7; i++)
             {
-                blockers[i] = DICE_FACES[i, rnd.Next(0, 6)];
+                blockers[i] = DICE_FACES[i][rnd.Next(0, DICE_RANGES[i])];
             }
         }
 
@@ -188,9 +203,9 @@ namespace Genius_Square_Solver
         {
             foreach (int dice in unusedDice)
             {
-                for (int face = 0; face < 6; face++)
+                for (int face = 0; face < DICE_RANGES[dice]; face++)
                 {
-                    if (DICE_FACES[dice, face] == input)
+                    if (DICE_FACES[dice][face] == input)
                     {
                         return dice;
                     }
@@ -198,6 +213,46 @@ namespace Genius_Square_Solver
             }
 
             return -1;
+        }
+
+        private static void InputSeed(ref string[] blockers)
+        {
+            Console.Write("Enter a seed (eg. 37): ");
+
+            int input = -1;
+            try
+            {
+                input = int.Parse(Console.ReadLine());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+
+            int[] diceIndexes = SeedToDice(input);
+
+            for (int i = 0; i < 7; i++)
+            {
+                blockers[i] = DICE_FACES[i][diceIndexes[i]];
+            }
+
+            //Console.Clear();
+        }
+
+        private static int[] SeedToDice(int input)
+        {
+            int n = input - 1;
+
+            int[] result = new int[7];
+
+            for (int i = 6; i >= 0; i--)
+            {
+                result[i] = n % DICE_RANGES[i];
+                n /= DICE_RANGES[i];
+            }
+
+            return result;
         }
 
         private static Board GenerateBoard(string[] blockers = null)
