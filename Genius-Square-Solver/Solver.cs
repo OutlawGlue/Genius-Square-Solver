@@ -21,19 +21,33 @@ namespace Genius_Square_Solver
             new Shape('.', new Cell(0, 0)),                                              // monomino
         };
 
+        public List<char[,]> Solutions { get; private set; } = new List<char[,]>();
+
         bool solved = false;
 
-        public Solver(Board board)
+        public Solver(Board board, bool findAll = false)
         {
-            //Precalc shape rotations:
             foreach (Shape shape in unusedShapes)
                 shape.CalculateOrientations();
 
-            Solved = Solve(board, unusedShapes);
+            if (findAll)
+            {
+                Solve(board, unusedShapes, true);
+                Console.WriteLine($"Found {Solutions.Count} solutions.");
 
-            board.DisplayBoard();
-            if (!Solved)
-                Console.WriteLine("No solution exists.");
+                //Display some solutions:
+                for (int i = 0; i < Math.Min(3, Solutions.Count); i++)
+                {
+                    DisplayRaw(Solutions[i]);
+                }
+            }
+            else
+            {
+                Solved = Solve(board, unusedShapes);
+                board.DisplayBoard();
+                if (!Solved)
+                    Console.WriteLine("No solution exists.");
+            }
         }
 
         public bool Solved
@@ -42,14 +56,24 @@ namespace Genius_Square_Solver
             private set { solved = value; }
         }
 
-        private bool Solve(Board board, List<Shape> shapes)
+        private bool Solve(Board board, List<Shape> shapes, bool findAll = false)
         {
             Cell[,] grid = board.Grid;
 
             int x, y;
             (x, y) = FindEmptyCell(board.Grid);
 
-            if (x == -1) return true;   //Check if board is full
+            //Check if board is full:
+            if (x == -1)
+            {
+                if (findAll)
+                {
+                    Solutions.Add(SnapshotBoard(grid));
+                    return false; //Continue searching
+                }
+                return true;
+            }
+   
 
             for (int i = 0; i < shapes.Count; i++)
             {
@@ -62,14 +86,67 @@ namespace Genius_Square_Solver
                     PlaceShape(board, orientation, x, y);
                     shapes.RemoveAt(i);
 
-                    if (Solve(board, shapes))
-                        return true;
+                    if (Solve(board, shapes, findAll))
+                    {
+                        if (!findAll)
+                        {
+                            return true;
+                        }
+                    }
 
                     UnplaceShape(board, orientation, x, y);
                     shapes.Insert(i, shape);
                 }
             }
             return false;
+        }
+
+        private static char[,] SnapshotBoard(Cell[,] grid)
+        {
+            char[,] gridCopy = new char[6, 6];
+
+            for (int row = 0; row < 6; row++)
+            {
+                for (int col = 0; col < 6; col++)
+                {
+                    gridCopy[row, col] = grid[row, col].Type;
+                }
+            }
+                    
+            return gridCopy;
+        }
+
+        public static void DisplayRaw(char[,] board)
+        {
+            Console.WriteLine("  1 2 3 4 5 6");
+
+            for (int y = 0; y < 6; y++)
+            {
+                Console.Write((char)('A' + y) + " ");
+                for (int x = 0; x < 6; x++)
+                {
+                    switch (board[y, x])
+                    {
+                        case '-': break;
+                        case 'x': Console.ForegroundColor = ConsoleColor.Yellow; break;  // blockers
+                        case 'Z': Console.ForegroundColor = ConsoleColor.Red; break;
+                        case 'L': Console.ForegroundColor = ConsoleColor.Blue; break;
+                        case 'T': Console.ForegroundColor = ConsoleColor.DarkGreen; break;
+                        case 'o': Console.ForegroundColor = ConsoleColor.Green; break;
+                        case '|': Console.ForegroundColor = ConsoleColor.DarkGray; break;
+                        case 'v': Console.ForegroundColor = ConsoleColor.DarkMagenta; break;
+                        case 'I': Console.ForegroundColor = ConsoleColor.White; break;
+                        case 'i': Console.ForegroundColor = ConsoleColor.Magenta; break;
+                        case '.': Console.ForegroundColor = ConsoleColor.DarkBlue; break;
+                    }
+
+                    Console.Write(board[y, x] + " ");
+
+                    Console.ResetColor();
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
 
         public static (int, int) FindEmptyCell(Cell[,] grid)
@@ -95,7 +172,7 @@ namespace Genius_Square_Solver
                 int gridX = startX + square.X;
                 int gridY = startY + square.Y;
 
-                if (gridX > 5 || gridY > 5)
+                if (gridX < 0 || gridX > 5 || gridY < 0 || gridY > 5)
                     return false;
 
                 if (grid[gridY, gridX].Type != '-')

@@ -57,7 +57,7 @@ namespace Genius_Square_Solver
                     //If clone is new, add:
                     if (seen.Add(fingerprint))
                     {
-                        Orientations.Add(cloneShape.CopySquares());
+                        Orientations.Add(AnchorToFirstSquare(cloneShape.CopySquares()));
                     }
 
                     //Else rotate and retry
@@ -103,6 +103,24 @@ namespace Genius_Square_Solver
                 copy[i] = new Cell(s.X, s.Y, id);
             }
             return copy;
+        }
+
+        //Shift a set of squares so the first square sits at (0,0)
+        private Cell[] AnchorToFirstSquare(Cell[] cells)
+        {
+            Cell anchor = cells[0];
+            foreach (Cell cell in cells)
+            {
+                if (cell.Y < anchor.Y || (cell.Y == anchor.Y && cell.X < anchor.X))
+                    anchor = cell;
+            }
+
+            Cell[] shifted = new Cell[cells.Length];
+            for (int i = 0; i < cells.Length; i++)
+            {
+                shifted[i] = new Cell(cells[i].X - anchor.X, cells[i].Y - anchor.Y, id);
+            }
+            return shifted;
         }
 
         public void RotateRight()
