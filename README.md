@@ -6,6 +6,7 @@ Genius Square is a head-to-head spatial puzzle game, where two players compete t
 
 > **Project goals:** verify that claim, discover just how many solutions each puzzle really has, and see how fast an algorithm can solve the game.
 
+(Also, some commits have incorrect messages, as despite me adding an applicable message to the commit, it shows an old message on GitHub)
 ---
 
 ## How it works
