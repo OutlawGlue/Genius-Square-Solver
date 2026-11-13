@@ -21,7 +21,7 @@ namespace Genius_Square_Solver
             new Shape('.', new Cell(0, 0)),                                              // monomino
         };
 
-        public List<char[,]> solutions { get; private set; } = new List<char[,]>();
+        public List<char[,]> Solutions { get; private set; } = new List<char[,]>();
 
         bool solved = false;
 
@@ -33,12 +33,12 @@ namespace Genius_Square_Solver
             if (findAll)
             {
                 Solve(board, unusedShapes, true);
-                Console.WriteLine($"Found {solutions.Count} solutions.");
+                Console.WriteLine($"Found {Solutions.Count} solutions.");
 
                 //Display some solutions:
-                for (int i = 0; i < Math.Min(3, solutions.Count); i++)
+                for (int i = 0; i < Math.Min(3, Solutions.Count); i++)
                 {
-                    DisplayRaw(solutions[i]);
+                    DisplayRaw(Solutions[i]);
                 }
             }
             else
@@ -68,7 +68,7 @@ namespace Genius_Square_Solver
             {
                 if (findAll)
                 {
-                    solutions.Add(SnapshotBoard(grid));
+                    Solutions.Add(SnapshotBoard(grid));
                     return false; //Continue searching
                 }
                 return true;
@@ -172,7 +172,7 @@ namespace Genius_Square_Solver
                 int gridX = startX + square.X;
                 int gridY = startY + square.Y;
 
-                if (gridX > 5 || gridY > 5)
+                if (gridX < 0 || gridX > 5 || gridY < 0 || gridY > 5)
                     return false;
 
                 if (grid[gridY, gridX].Type != '-')
