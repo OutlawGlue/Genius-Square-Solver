@@ -19,7 +19,7 @@ Each of the 9 pieces (a monomino, domino, two trominoes, and five tetrominoes) i
 
 ### 2. Precomputing orientations
 
-Rather than rotating pieces during the search, every distinct orientation is generated once at startup (4 rotations × 2 flips), deduplicated by a "fingerprint" (the sorted list of a shape's square coordinates). For example, the L piece yields 8 distinct orientations, while the square yields only 1. The search then never mutates a piece, it only picks from pre-built arrays. This avoids an entire class of bugs and speeds the loop up considerably.
+Rather than rotating pieces during the search, every distinct orientation is generated once at startup (4 rotations × 2 flips), deduplicated by a "fingerprint" (the sorted list of a shape's square coordinates). For example, the L piece yields 8 distinct orientations, while the square yields only 1. These are then anchored to the first square (0,0), so the shape orientation always covers that cell the algorithm is looking to fill. The search then never mutates a piece, it only picks from pre-built arrays. This avoids an entire class of bugs and speeds the loop up considerably.
 
 ### 3. The anchor-cell strategy
 
