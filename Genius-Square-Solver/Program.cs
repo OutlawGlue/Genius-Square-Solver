@@ -64,6 +64,7 @@ namespace Genius_Square_Solver
         private static void StartSingleSolve(int cursorTop)
         {
             string[] blockers = new string[7];
+            bool findAll = false;
 
             //Reset to sub-menu display:
             Console.SetCursorPosition(0, cursorTop);
@@ -92,11 +93,17 @@ namespace Genius_Square_Solver
                     Console.ReadLine(); return;
             }
 
+            Console.Write("\nDo you want to find all solutions for each puzzle (y/N): ");
+            if (Console.ReadLine().ToLower() == "y")
+            {
+                findAll = true;
+            }
+
             Console.Clear();
-            HandleSolve(blockers);
+            HandleSolve(blockers, false, findAll);
         }
 
-        private static void HandleSolve(string[] blockers, bool isMulti = false, int seed = 0)
+        private static void HandleSolve (string[] blockers, bool isMulti, bool findAll, int seed = 0)
         {
             Board board = GenerateBoard(blockers);
 
@@ -113,7 +120,7 @@ namespace Genius_Square_Solver
                 if (toProceed.ToLower() != "n")
                 {
                     Console.WriteLine("Solution:");
-                    new Solver(board);
+                    new Solver(board, findAll);
                 }
                 else
                 {
@@ -123,7 +130,7 @@ namespace Genius_Square_Solver
             else
             {
                 Console.WriteLine($"Solution {seed}:");
-                new Solver(board);
+                new Solver(board, findAll);
             }
         }
 
@@ -140,17 +147,18 @@ namespace Genius_Square_Solver
             Console.SetCursorPosition(0, cursorTop);
 
             Console.WriteLine("" +
-                "\n 1: Input solve bounds" +
+                "\n 1: Input solve settings" +
                 "\n 2: Coming soon..." +
                 "\n 3: Return to menu");
 
             string input = Console.ReadLine();
 
             int start, end;
+            bool findAll = false;
 
             switch (input)
             {
-                case "1": InputSolveBounds(out start, out end); break;
+                case "1": InputSolveBounds(out start, out end, ref findAll); break;
                 case "2": /*Use a config file for solve*/
                 case "3": return;
                 default:
@@ -169,13 +177,13 @@ namespace Genius_Square_Solver
                     blockers[i] = DICE_FACES[i][diceIndexes[i]];
                 }
 
-                HandleSolve(blockers, true, start);
+                HandleSolve(blockers, true, findAll, start);
 
                 start++;
             }
         }
 
-        private static void InputSolveBounds(out int start, out int end)
+        private static void InputSolveBounds(out int start, out int end, ref bool findAll)
         {
             Console.Clear();
 
@@ -202,6 +210,12 @@ namespace Genius_Square_Solver
                 }
 
                 break;
+            }
+
+            Console.Write("\nDo you want to find all solutions for each puzzle (y/N): ");
+            if (Console.ReadLine().ToLower() == "y")
+            {
+                findAll = true;
             }
 
             Console.Clear();
