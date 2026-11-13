@@ -24,8 +24,6 @@ namespace Genius_Square_Solver
         {
             Console.WriteLine("  1 2 3 4 5 6");
 
-            ConsoleColor colour = Console.ForegroundColor;
-
             for (int y = 0; y < 6; y++)
             {
                 Console.Write((char)('A' + y) + " ");

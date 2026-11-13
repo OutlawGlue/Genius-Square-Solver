@@ -45,9 +45,7 @@ namespace Genius_Square_Solver
                 "\n 2: Multi solver" +
                 "\n 3: Exit");
 
-            string input = Console.ReadLine();
-
-            string[] blockers = new string[7];       
+            string input = Console.ReadLine();    
 
             switch (input)
             {

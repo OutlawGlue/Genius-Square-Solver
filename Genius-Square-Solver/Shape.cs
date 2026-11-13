@@ -8,7 +8,7 @@ namespace Genius_Square_Solver
 {
     internal class Shape
     {
-        char id;
+        readonly char id;
         Cell[] squares;
 
         public Shape(char id, params Cell[] squares)

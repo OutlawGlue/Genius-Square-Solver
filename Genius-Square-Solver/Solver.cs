@@ -8,7 +8,7 @@ namespace Genius_Square_Solver
 {
     internal class Solver
     {
-        List<Shape> unusedShapes = new List<Shape>
+        readonly List<Shape> unusedShapes = new List<Shape>
         {
             new Shape('Z', new Cell(0, 0), new Cell(0, 1), new Cell(1, 1), new Cell(1, 2)),  // S/Z
             new Shape('L', new Cell(0, 0), new Cell(0, 1), new Cell(0, 2), new Cell(1, 2)),  // L
