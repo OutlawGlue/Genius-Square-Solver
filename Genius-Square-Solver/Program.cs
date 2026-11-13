@@ -93,6 +93,7 @@ namespace Genius_Square_Solver
                     Console.ReadLine(); return;
             }
 
+            Console.Clear();
             Console.Write("\nDo you want to find all solutions for each puzzle (y/N): ");
             if (Console.ReadLine().ToLower() == "y")
             {
@@ -119,7 +120,10 @@ namespace Genius_Square_Solver
 
                 if (toProceed.ToLower() != "n")
                 {
-                    Console.WriteLine("Solution:");
+                    if (seed == 0)
+                        seed = BlockersToSeed(blockers);
+                    
+                    Console.WriteLine($"Seed {seed}:");
                     new Solver(board, findAll);
                 }
                 else
@@ -129,8 +133,8 @@ namespace Genius_Square_Solver
             }
             else
             {
-                Console.WriteLine($"Solution {seed}:");
-                new Solver(board, findAll);
+                Console.WriteLine($"Seed {seed}:");
+                new Solver(board, findAll, true);
             }
         }
 
@@ -345,6 +349,46 @@ namespace Genius_Square_Solver
             }
 
             return result;
+        }
+
+        private static int DiceToSeed(int[] diceFaces)
+        {
+            int n = 0;
+
+            for (int i = 0; i < 7; i++)
+            {
+                n = n * DICE_RANGES[i] + diceFaces[i];
+            }
+
+            return n + 1;   //As seeds are 1-based
+        }
+
+        private static int BlockersToSeed(string[] blockers)
+        {
+            int[] diceFaces = new int[7];
+
+            for (int die = 0; die < 7; die++)
+            {
+                int found = -1;
+
+                foreach (string blocker in blockers)
+                {
+                    int index = Array.IndexOf(DICE_FACES[die], blocker.Trim().ToUpper());
+                    if (index != -1)
+                    {
+                        if (found != -1)
+                            throw new ArgumentException("Two blockers belong to die " + die);
+                        found = index;
+                    }
+                }
+
+                if (found == -1)
+                    throw new ArgumentException("No blocker belongs to die " + die);
+
+                diceFaces[die] = found;
+            }
+
+            return DiceToSeed(diceFaces);
         }
 
         private static Board GenerateBoard(string[] blockers = null)

@@ -25,7 +25,7 @@ namespace Genius_Square_Solver
 
         bool solved = false;
 
-        public Solver(Board board, bool findAll = false)
+        public Solver(Board board, bool findAll, bool isMulti = false)
         {
             foreach (Shape shape in unusedShapes)
                 shape.CalculateOrientations();
@@ -33,12 +33,15 @@ namespace Genius_Square_Solver
             if (findAll)
             {
                 Solve(board, unusedShapes, true);
-                Console.WriteLine($"Found {Solutions.Count} solutions.");
+                Console.WriteLine($"Found {Solutions.Count:N0} solutions.");
 
-                //Display some solutions:
-                for (int i = 0; i < Math.Min(3, Solutions.Count); i++)
+                if (!isMulti)
                 {
-                    DisplayRaw(Solutions[i]);
+                    //Display some solutions:
+                    for (int i = 0; i < Math.Min(3, Solutions.Count); i++)
+                    {
+                        DisplayRaw(Solutions[i]);
+                    }
                 }
             }
             else
