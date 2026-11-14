@@ -18,16 +18,6 @@ namespace Genius_Square_Solver
             }
         }
 
-        public Cell[] Squares
-        {
-            get { return squares; }
-        }
-
-        public char Id
-        {
-            get { return id; }
-        }
-
         public List<Cell[]> Orientations 
         { 
             get; 
@@ -62,7 +52,7 @@ namespace Genius_Square_Solver
             }
         }
 
-        public string Key()
+        private string Key()
         {
             //Build "x,y" text for every square, then sort + join
             List<string> parts = new List<string>();
@@ -119,7 +109,7 @@ namespace Genius_Square_Solver
             return shifted;
         }
 
-        public void RotateRight()
+        private void RotateRight()
         {
             Cell[] newSquares = new Cell[squares.Length];
 
@@ -134,7 +124,7 @@ namespace Genius_Square_Solver
             Normalise();
         }
 
-        public void Flip()
+        private void Flip()
         {
             Cell[] newSquares = new Cell[squares.Length];
 
@@ -149,7 +139,7 @@ namespace Genius_Square_Solver
             Normalise();
         }
 
-        public void Normalise()
+        private void Normalise()
         {
             int minX = int.MaxValue;
             int minY = int.MaxValue;
