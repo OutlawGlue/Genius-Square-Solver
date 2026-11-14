@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Genius_Square_Solver
 {
     internal class Board
     {
-        readonly Cell[,] grid = new Cell[6, 6];
+        private readonly Cell[,] grid = new Cell[6, 6];
 
         public Board(Cell[,] grid)
         {
@@ -55,16 +51,6 @@ namespace Genius_Square_Solver
         public void AddCellToBoard(Cell cell)
         {
             grid[cell.Y, cell.X] = cell;
-        }
-
-        public void AddShapeToBoard(Shape shape, int startX, int startY)
-        {
-            foreach (Cell square in shape.Squares)
-            {
-                int gridX = startX + square.X;
-                int gridY = startY + square.Y;
-                Grid[gridY, gridX].Type = shape.Id; //Mutate the existing grid cell
-            }
         }
     }
 }

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Genius_Square_Solver
 {
     internal class Shape
     {
-        readonly char id;
-        Cell[] squares;
+        private readonly char id;
+        private Cell[] squares;
 
         public Shape(char id, params Cell[] squares)
         {

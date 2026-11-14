@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Genius_Square_Solver
+﻿namespace Genius_Square_Solver
 {
     internal class Cell
     {
-        int x;
-        int y;
-        char type;
+        private readonly int x;
+        private readonly int y;
+        private char type;
 
         public Cell(int x, int y, char type = '-')
         {

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Genius_Square_Solver
 {
     internal class Solver
     {
-        readonly List<Shape> defaultShapes = new List<Shape>
+        private readonly List<Shape> defaultShapes = new List<Shape>
         {
             new Shape('Z', new Cell(0, 0), new Cell(0, 1), new Cell(1, 1), new Cell(1, 2)),  // S/Z
             new Shape('L', new Cell(0, 0), new Cell(0, 1), new Cell(0, 2), new Cell(1, 2)),  // L
@@ -24,9 +21,9 @@ namespace Genius_Square_Solver
         private readonly bool findAll;
         private readonly bool isMulti;
 
-        public List<char[,]> Solutions { get; private set; } = new List<char[,]>();
-
         private bool solved = false;
+
+        public List<char[,]> Solutions { get; private set; } = new List<char[,]>();
 
         public Solver(bool findAll, bool isMulti)
         {

@@ -6,7 +6,7 @@ namespace Genius_Square_Solver
 {
     internal class Program
     {
-        static readonly string[][] DICE_FACES =
+        private static readonly string[][] DICE_FACES =
         {
             new[] { "A1", "C1", "D1", "D2", "E2", "F3" },
             new[] { "A2", "B2", "C2", "A3", "B1", "B3" },
@@ -17,10 +17,10 @@ namespace Genius_Square_Solver
             new[] { "F1", "A6" }
         };
 
-        static readonly int[] DICE_RANGES = { 6, 6, 6, 4, 6, 6, 2 };
+        private static readonly int[] DICE_RANGES = { 6, 6, 6, 4, 6, 6, 2 };
 
 
-        static void Main()
+        private static void Main()
         {
             while (true)
             {
@@ -322,7 +322,7 @@ namespace Genius_Square_Solver
 
                 unusedDice.Remove(diceIndex);
                 blockers[diceIndex] = input;
-                board.AddCellToBoard(Tools.StrToCell(input, true));
+                board.AddCellToBoard(StrToCell(input, true));
 
                 Console.Clear();
                 board.DisplayBoard();
@@ -452,7 +452,7 @@ namespace Genius_Square_Solver
             {
                 foreach (string blocker in blockers)
                 {
-                    Cell cell = Tools.StrToCell(blocker, true);
+                    Cell cell = StrToCell(blocker, true);
                     int y = cell.Y; int x = cell.X;
 
                     grid[y, x] = cell;
@@ -460,6 +460,22 @@ namespace Genius_Square_Solver
             }
 
             return new Board(grid);
+        }
+
+        private static Cell StrToCell(string coord, bool blocker = false)
+        {
+            // Remember letter is the row, number is the column
+            int x = Convert.ToInt16(coord[1] - 49); //string num to int num
+            int y = Convert.ToInt16((char)coord[0]) - 65; //string letter to int
+
+            if (!blocker)
+            {
+                return new Cell(x, y);
+            }
+            else
+            {
+                return new Cell(x, y, 'x');
+            }
         }
     }
 }
