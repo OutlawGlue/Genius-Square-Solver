@@ -34,7 +34,7 @@ namespace Genius_Square_Solver
             this.isMulti = isMulti;
 
             foreach (Shape shape in defaultShapes)
-                shape.CalculateOrientations(); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
+                shape.CalculateOrientations();
         }
 
         public bool Solved

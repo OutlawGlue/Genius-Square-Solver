@@ -123,7 +123,6 @@ namespace Genius_Square_Solver
                         seed = BlockersToSeed(blockers);
                     
                     Console.WriteLine($"Seed {seed}:");
-                    //new Solver(findAll, isMulti);
                     solver.ManageSolve(board);
 
                     return 0;
@@ -136,8 +135,7 @@ namespace Genius_Square_Solver
             else
             {
                 Console.WriteLine($"Seed {seed}:");
-                //Solver solver = new Solver(findAll, true); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
-
+                
                 solver.ManageSolve(board);
 
                 return solver.Solutions.Count;
