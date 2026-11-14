@@ -9,7 +9,7 @@ Genius Square is a head-to-head spatial puzzle game, where two players compete t
 (Also, some commits have incorrect messages, as despite me adding an applicable message to the commit, it shows an old message on GitHub)
 ---
 
-## How it works
+## How It Works
 
 The solver is a classic **backtracking search** with a few refinements that make it dramatically faster than brute force.
 
@@ -28,3 +28,9 @@ The search always fills the top-left-most empty square first, and only considers
 ### 4. Backtracking
 
 The solver commits a placement, recurses, and if the recursion reports failure it undoes the placement and tries the next option. When the board is full, a solution has been found. When every option at some level fails, the search unwinds until an earlier choice can be changed.
+
+## The Code Optimisation Process
+
+From my own testing (on a Ryzen 7 7840HS), the algorithm was able to fully solve seeds 1-100 between 4.8 and 5 seeds/sec. While this makes solving single or small ranges of seeds a quick process, it would mean solving all seeds would take an estimated 3.46 hours. While in reality, you only need to solve each puzzle once and then store the answers for later use, where is the fun in that?
+
+So I started to look for optimisations in the code, with the biggest gains obviously being in the algorithm itself.
