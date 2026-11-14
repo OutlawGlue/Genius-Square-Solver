@@ -6,7 +6,7 @@ Genius Square is a head-to-head spatial puzzle game, where two players compete t
 
 > **Project goals:** verify that claim, discover just how many solutions each puzzle really has, and see how fast an algorithm can solve the game.
 
-(Also, some commits have incorrect messages, as despite me adding an applicable message to the commit, it shows an old message on GitHub)
+(Also, some earlier commits have incorrect messages, as I forgot to add message for individual commits rather than pushes)
 ---
 
 ## How It Works
@@ -31,6 +31,10 @@ The solver commits a placement, recurses, and if the recursion reports failure i
 
 ## The Code Optimisation Process
 
-From my own testing (on a Ryzen 7 7840HS), the algorithm was able to fully solve seeds 1-100 between 4.8 and 5 seeds/sec. While this makes solving single or small ranges of seeds a quick process, it would mean solving all seeds would take an estimated 3.46 hours. While in reality, you only need to solve each puzzle once and then store the answers for later use, where is the fun in that?
+From my own testing (on a Ryzen 7 7840HS), the algorithm was able to fully solve seeds 1-100 between **4.8 and 5.0 seeds/sec**. While this makes solving single or small ranges of seeds a quick process, it would mean solving all seeds would take an estimated 3.46 hours. While in reality, you only need to solve each puzzle once and then store the answers for later use, where is the fun in that?
 
-So I started to look for optimisations in the code, with the biggest gains obviously being in the algorithm itself.
+So I started to look for optimisations in the code, with the biggest gains obviously being in the algorithm itself. Here are some of the optimisations I made: **(Note: when i mention test results, they were all done on full solves, for seeds 1-100)**
+
+### CalculateOrientations being called for every seed
+
+With how I had set the Solver class up, it was calculating every orientation of the shapes for every seed when called from a multi-solve. This involved restructuring Solver, taking logic out of the constructor, and in to the new ManageSolve class, then moving parameters so that it worked as intended. This took our solving speed to between **4.9 and 5.0 seeds/sec**, an improvement but within margin of error. As this is only per seed, rather than making tree traversal faster, it is a small improvement in the grand scheme of things.
