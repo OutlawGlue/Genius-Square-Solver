@@ -99,7 +99,7 @@ namespace Genius_Square_Solver
 
             Console.Clear();
 
-            Solver solver = new Solver(false, findAll);
+            Solver solver = new Solver(findAll, false);
             HandleSolve(blockers, solver);
         }
 
