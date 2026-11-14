@@ -30,6 +30,17 @@ namespace Genius_Square_Solver
             foreach (Shape shape in unusedShapes)
                 shape.CalculateOrientations(); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
 
+            ManageSolve(board, findAll, isMulti);
+        }
+
+        public bool Solved
+        {
+            get { return solved; }
+            private set { solved = value; }
+        }
+
+        private void ManageSolve(Board board, bool findAll, bool isMulti = false)
+        {
             if (findAll)
             {
                 Solve(board, unusedShapes, true);
@@ -51,12 +62,6 @@ namespace Genius_Square_Solver
                 if (!Solved)
                     Console.WriteLine("No solution exists.");
             }
-        }
-
-        public bool Solved
-        {
-            get { return solved; }
-            private set { solved = value; }
         }
 
         private bool Solve(Board board, List<Shape> shapes, bool findAll = false)
