@@ -8,7 +8,7 @@ namespace Genius_Square_Solver
 {
     internal class Board
     {
-        Cell[,] grid = new Cell[6, 6];
+        readonly Cell[,] grid = new Cell[6, 6];
 
         public Board(Cell[,] grid)
         {

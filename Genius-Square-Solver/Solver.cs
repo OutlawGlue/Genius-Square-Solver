@@ -21,8 +21,8 @@ namespace Genius_Square_Solver
             new Shape('.', new Cell(0, 0)),                                              // monomino
         };
 
-        private bool findAll;
-        private bool isMulti;
+        private readonly bool findAll;
+        private readonly bool isMulti;
 
         public List<char[,]> Solutions { get; private set; } = new List<char[,]>();
 
