@@ -28,7 +28,7 @@ namespace Genius_Square_Solver
         public Solver(Board board, bool findAll, bool isMulti = false)
         {
             foreach (Shape shape in unusedShapes)
-                shape.CalculateOrientations();
+                shape.CalculateOrientations(); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
 
             if (findAll)
             {

@@ -133,7 +133,7 @@ namespace Genius_Square_Solver
             else
             {
                 Console.WriteLine($"Seed {seed}:");
-                Solver solver = new Solver(board, findAll, true);
+                Solver solver = new Solver(board, findAll, true); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
 
                 return solver.Solutions.Count;
             }
