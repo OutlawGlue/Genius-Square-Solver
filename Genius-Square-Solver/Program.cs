@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Genius_Square_Solver
 {
@@ -104,7 +101,7 @@ namespace Genius_Square_Solver
             HandleSolve(blockers, false, findAll);
         }
 
-        private static void HandleSolve (string[] blockers, bool isMulti, bool findAll, int seed = 0)
+        private static int HandleSolve (string[] blockers, bool isMulti, bool findAll, int seed = 0)
         {
             Board board = GenerateBoard(blockers);
 
@@ -125,22 +122,27 @@ namespace Genius_Square_Solver
                     
                     Console.WriteLine($"Seed {seed}:");
                     new Solver(board, findAll);
+
+                    return 0;
                 }
                 else
                 {
-                    return;
+                    return 0;
                 }
             }
             else
             {
                 Console.WriteLine($"Seed {seed}:");
-                new Solver(board, findAll, true);
+                Solver solver = new Solver(board, findAll, true);
+
+                return solver.Solutions.Count;
             }
         }
 
         private static void StartMultiSolve(int cursorTop)
         {
             string[] blockers = new string[7];
+            List<(int seed, int count)> results = new List<(int seed, int count)>();
 
             //Reset to sub-menu display:
             Console.SetCursorPosition(0, cursorTop);
@@ -172,6 +174,9 @@ namespace Genius_Square_Solver
 
             Console.Clear();
 
+            int tempCount;
+            Stopwatch timer = Stopwatch.StartNew();
+
             while (start <= end)
             {
                 int[] diceIndexes = SeedToDice(start);
@@ -181,10 +186,40 @@ namespace Genius_Square_Solver
                     blockers[i] = DICE_FACES[i][diceIndexes[i]];
                 }
 
-                HandleSolve(blockers, true, findAll, start);
+                tempCount = HandleSolve(blockers, true, findAll, start);
+                results.Add((start, tempCount));
 
                 start++;
             }
+
+            timer.Stop();
+
+            //Summary:
+            int minCount = int.MaxValue, maxCount = 0, total = 0;
+            int minSeed = 0, maxSeed = 0;
+
+            foreach (var (seed, count) in results)
+            {
+                total += count;
+
+                if (count < minCount)
+                {
+                    minCount = count;
+                    minSeed = seed;
+                }
+
+                if (count > maxCount)
+                {
+                    maxCount = count;
+                    maxSeed = seed;
+                } 
+            }
+
+            Console.WriteLine($"\n--- Summary: {results.Count} puzzles ---");
+            Console.WriteLine($"Time: {timer.Elapsed.TotalSeconds:N2}s at {results.Count / timer.Elapsed.TotalSeconds:N1} seeds/sec\n");
+            Console.WriteLine($"Min: {minCount:N0} solutions (seed {minSeed})");
+            Console.WriteLine($"Max: {maxCount:N0} solutions (seed {maxSeed})");
+            Console.WriteLine($"Avg: {(double)total / results.Count:N1} solutions\n");
         }
 
         private static void InputSolveBounds(out int start, out int end, ref bool findAll)
