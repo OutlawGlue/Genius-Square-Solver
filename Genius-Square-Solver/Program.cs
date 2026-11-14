@@ -98,14 +98,16 @@ namespace Genius_Square_Solver
             }
 
             Console.Clear();
-            HandleSolve(blockers, false, findAll);
+
+            Solver solver = new Solver(false, findAll);
+            HandleSolve(blockers, solver);
         }
 
-        private static int HandleSolve (string[] blockers, bool isMulti, bool findAll, int seed = 0)
+        private static int HandleSolve (string[] blockers, Solver solver, int seed = 0)
         {
             Board board = GenerateBoard(blockers);
 
-            if (!isMulti)
+            if (!solver.IsMulti)
             {
                 Console.WriteLine("Blank board:");
                 board.DisplayBoard();
@@ -121,7 +123,8 @@ namespace Genius_Square_Solver
                         seed = BlockersToSeed(blockers);
                     
                     Console.WriteLine($"Seed {seed}:");
-                    new Solver(board, findAll);
+                    //new Solver(findAll, isMulti);
+                    solver.ManageSolve(board);
 
                     return 0;
                 }
@@ -133,7 +136,9 @@ namespace Genius_Square_Solver
             else
             {
                 Console.WriteLine($"Seed {seed}:");
-                Solver solver = new Solver(board, findAll, true); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
+                //Solver solver = new Solver(findAll, true); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
+
+                solver.ManageSolve(board);
 
                 return solver.Solutions.Count;
             }
@@ -177,6 +182,9 @@ namespace Genius_Square_Solver
             int tempCount;
             Stopwatch timer = Stopwatch.StartNew();
 
+            //Setup solver:
+            Solver solver = new Solver(findAll, true);
+
             while (start <= end)
             {
                 int[] diceIndexes = SeedToDice(start);
@@ -186,7 +194,7 @@ namespace Genius_Square_Solver
                     blockers[i] = DICE_FACES[i][diceIndexes[i]];
                 }
 
-                tempCount = HandleSolve(blockers, true, findAll, start);
+                tempCount = HandleSolve(blockers, solver, start);
                 results.Add((start, tempCount));
 
                 start++;
