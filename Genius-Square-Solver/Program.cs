@@ -223,9 +223,13 @@ namespace Genius_Square_Solver
 
             Console.WriteLine($"\n--- Summary: {results.Count} puzzles ---");
             Console.WriteLine($"Time: {timer.Elapsed.TotalSeconds:N2}s at {results.Count / timer.Elapsed.TotalSeconds:N1} seeds/sec\n");
-            Console.WriteLine($"Min: {minCount:N0} solutions (seed {minSeed})");
-            Console.WriteLine($"Max: {maxCount:N0} solutions (seed {maxSeed})");
-            Console.WriteLine($"Avg: {(double)total / results.Count:N1} solutions\n");
+            
+            if (findAll)
+            {
+                Console.WriteLine($"Min: {minCount:N0} solutions (seed {minSeed})");
+                Console.WriteLine($"Max: {maxCount:N0} solutions (seed {maxSeed})");
+                Console.WriteLine($"Avg: {(double)total / results.Count:N1} solutions\n");
+            }
         }
 
         private static void InputSolveBounds(out int start, out int end, ref bool findAll)
