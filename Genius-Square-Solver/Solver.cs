@@ -8,7 +8,7 @@ namespace Genius_Square_Solver
 {
     internal class Solver
     {
-        readonly List<Shape> unusedShapes = new List<Shape>
+        readonly List<Shape> defaultShapes = new List<Shape>
         {
             new Shape('Z', new Cell(0, 0), new Cell(0, 1), new Cell(1, 1), new Cell(1, 2)),  // S/Z
             new Shape('L', new Cell(0, 0), new Cell(0, 1), new Cell(0, 2), new Cell(1, 2)),  // L
@@ -33,7 +33,7 @@ namespace Genius_Square_Solver
             this.findAll = findAll;
             this.isMulti = isMulti;
 
-            foreach (Shape shape in unusedShapes)
+            foreach (Shape shape in defaultShapes)
                 shape.CalculateOrientations(); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
         }
 
@@ -50,6 +50,8 @@ namespace Genius_Square_Solver
 
         public void ManageSolve(Board board)
         {
+            List<Shape> unusedShapes = new List<Shape>(defaultShapes);
+
             if (findAll)
             {
                 Solve(board, unusedShapes);
