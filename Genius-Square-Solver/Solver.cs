@@ -8,7 +8,7 @@ namespace Genius_Square_Solver
 {
     internal class Solver
     {
-        readonly List<Shape> unusedShapes = new List<Shape>
+        readonly List<Shape> defaultShapes = new List<Shape>
         {
             new Shape('Z', new Cell(0, 0), new Cell(0, 1), new Cell(1, 1), new Cell(1, 2)),  // S/Z
             new Shape('L', new Cell(0, 0), new Cell(0, 1), new Cell(0, 2), new Cell(1, 2)),  // L
@@ -21,18 +21,40 @@ namespace Genius_Square_Solver
             new Shape('.', new Cell(0, 0)),                                              // monomino
         };
 
+        private bool findAll;
+        private bool isMulti;
+
         public List<char[,]> Solutions { get; private set; } = new List<char[,]>();
 
-        bool solved = false;
+        private bool solved = false;
 
-        public Solver(Board board, bool findAll, bool isMulti = false)
+        public Solver(bool findAll, bool isMulti)
         {
-            foreach (Shape shape in unusedShapes)
-                shape.CalculateOrientations();
+            this.findAll = findAll;
+            this.isMulti = isMulti;
+
+            foreach (Shape shape in defaultShapes)
+                shape.CalculateOrientations(); // !!!CALLS CALCULATE ORIENTATIONS FOR EVERY SEED IN A MULTI!!!
+        }
+
+        public bool Solved
+        {
+            get { return solved; }
+            private set { solved = value; }
+        }
+
+        public bool IsMulti
+        {
+            get { return isMulti; }
+        }
+
+        public void ManageSolve(Board board)
+        {
+            List<Shape> unusedShapes = new List<Shape>(defaultShapes);
 
             if (findAll)
             {
-                Solve(board, unusedShapes, true);
+                Solve(board, unusedShapes);
                 Console.WriteLine($"Found {Solutions.Count:N0} solutions.");
 
                 if (!isMulti)
@@ -53,13 +75,7 @@ namespace Genius_Square_Solver
             }
         }
 
-        public bool Solved
-        {
-            get { return solved; }
-            private set { solved = value; }
-        }
-
-        private bool Solve(Board board, List<Shape> shapes, bool findAll = false)
+        private bool Solve(Board board, List<Shape> shapes)
         {
             Cell[,] grid = board.Grid;
 
@@ -89,7 +105,7 @@ namespace Genius_Square_Solver
                     PlaceShape(board, orientation, x, y);
                     shapes.RemoveAt(i);
 
-                    if (Solve(board, shapes, findAll))
+                    if (Solve(board, shapes))
                     {
                         if (!findAll)
                         {
