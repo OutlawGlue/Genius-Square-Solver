@@ -50,6 +50,7 @@ namespace Genius_Square_Solver
 
         public void ManageSolve(Board board)
         {
+            Solutions.Clear();
             List<Shape> unusedShapes = new List<Shape>(defaultShapes);
 
             if (findAll)
